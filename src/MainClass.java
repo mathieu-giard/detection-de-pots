@@ -51,8 +51,7 @@ public class MainClass {
 		
 		for(int x = 0; x < img.getWidth(); x++){
         	for(int y = 0; y < img.getHeight(); y++){//parcourir l'image
-        		Pixel pixel = img[x][y];
-        		pixel.getNumeroPixel(); 
+        	
         	}
 		}
 		return null;
