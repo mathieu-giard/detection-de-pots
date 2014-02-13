@@ -9,7 +9,7 @@ public class Pixel {
 	private float T ;
 	private float L ;
 	private float S ;
-	private int nP = 0;
+	private int nP = Integer.MAX_VALUE;
 
 	
 	public Pixel(int x, int y, float T,float S, float L ){
@@ -46,33 +46,33 @@ public class Pixel {
 	
 
 	
-	public Pixel pixelVoisinGauche(Pixel pixel, BufferedImage img){
+	public Pixel pixelVoisinGauche(BufferedImage img){
 		Pixel V = null;
-		if (pixel.getX()!= 0){
+		if (x!= 0){
 			V = new Pixel(x-1,y,img);
 		}
 		return V;
 	}
 	
-	public Pixel pixelVoisinDroite(Pixel pixel, BufferedImage img){
+	public Pixel pixelVoisinDroite(BufferedImage img){
 		Pixel V = null;
-		if (pixel.getX()!= img.getTileWidth()){
+		if (x!= img.getTileWidth()){
 			V = new Pixel(x+1,y,img);
 		}
 		return V;
 	}
 	
-	public Pixel pixelVoisinHaut(Pixel pixel, BufferedImage img){
+	public Pixel pixelVoisinHaut(BufferedImage img){
 		Pixel V = null;
-		if (pixel.getX()!= 0){
+		if (this.y!= 0){
 			V = new Pixel(x,y-1,img);
 		}
 		return V;
 	}
 	
-	public Pixel pixelVoisinBas(Pixel pixel, BufferedImage img){
+	public Pixel pixelVoisinBas(BufferedImage img){
 		Pixel V = null;
-		if (pixel.getX()!= img.getHeight()){
+		if (this.y!= img.getHeight()){
 			V = new Pixel(x,y+1,img);
 		}
 		return V;
@@ -81,4 +81,11 @@ public class Pixel {
 	public int getNumeroPixel(){
 		return nP;
 	}
+	
+	public void setNumeroPixel(int a){
+		this.nP =a ; 
+	}
+	
+	
+	
 }
