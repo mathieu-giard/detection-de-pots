@@ -103,7 +103,7 @@ public class MainClass {
 		for (ArrayList<Pixel> aa: CC){
 			for(Pixel P: cc){
 	        		if (BelongsTocc(P, cc)==false){
-	        			if (BelongsTocc(P.pixelVoisinDroite(img), cc)==true){
+	        			if (BelongsTocc(P.pixelVoisinDroite(img), cc)==true || BelongsTocc(P.pixelVoisinGauche(img), cc)==true || BelongsTocc(P.pixelVoisinHaut(img), cc)==true || BelongsTocc(P.pixelVoisinBas(img), cc)==true){
 	        				contours.add(P);
 	        			}
 	        		}
