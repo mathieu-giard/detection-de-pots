@@ -13,7 +13,21 @@ import org.apache.commons.math3.transform.*;
 
 public class MainClass {
 	private BufferedImage img;
+	private Complex[] refCarre;
+	private Complex[] refRond;
 
+	public ArrayList<Rectangle> MainAlgo(String filename,int seuilTinf, int seuilTsup, int seuilS, int seuilL , int seuilTestRondCarre){
+		decodeimage(filename);
+		 ArrayList<Pixel> s = selec(seuilTinf, seuilTsup, seuilS, seuilL);
+		 ArrayList<ArrayList<Pixel>> t = ComposantesConnexes(s);
+		 ArrayList<ArrayList<Pixel>> u = Contours (t);
+		 ArrayList<ArrayList<Point>> v = signature(u);
+		 ArrayList<Complex[]> w = descripteursDeFourier(v);
+		 ArrayList<Rectangle> ResultatFinal = zonePlante(w,u,seuilTestRondCarre);
+		return ResultatFinal;	
+	}
+	
+	
 	
 	public void decodeimage(String filename){	
 		try{
@@ -25,7 +39,7 @@ public class MainClass {
 		}
 		}
 
-	public ArrayList<Pixel> selec(int seuilTinf,int seuilTsup, int seuilS){
+	public ArrayList<Pixel> selec(int seuilTinf, int seuilTsup, int seuilS, int seuilL){
 		//selection des bons pixels
 		ArrayList<Pixel> Choisi = new ArrayList<Pixel>();
 		
@@ -55,7 +69,6 @@ public class MainClass {
 		int i = 0;
 		int L = Integer.MAX_VALUE;
 		ArrayList<ArrayList<Pixel>> CC = new ArrayList<ArrayList<Pixel>>();
-		CC = null;
 		
 		for(Pixel pixel1 : choisi){
 			int a = pixel1.pixelVoisinGauche(img).getNumeroPixel();
@@ -103,7 +116,7 @@ public class MainClass {
 		return b;
 	}
 	
-	public ArrayList<ArrayList<Pixel>> Contours(ArrayList<ArrayList<Pixel>> CC/*, ArrayList<Pixel> cc*/){
+	public ArrayList<ArrayList<Pixel>> Contours(ArrayList<ArrayList<Pixel>> CC){
 		ArrayList<ArrayList< Pixel> > CONTOURS = new ArrayList<ArrayList<Pixel>>();
 		ArrayList<Pixel> contours= new ArrayList<Pixel>();
 		for (ArrayList<Pixel> aa: CC){
@@ -196,11 +209,98 @@ public class MainClass {
   
  */
 	
-	public class comparaisonDescripteurs(ArrayList<ArrayList<Point>> refCOURBE, ArrayList<ArrayList<Point>> mesCOURBE, float seuil){
-		float diff=0;
-		for (int i=0; i<descripteursDeFourier(refCOURBE).size() ; i++){
-			
+	public boolean comparaisonDescripteursCarre(Complex[] test, float seuil){
+		boolean estCarre = false; 
+		double diff=0;
+		for (int i=0; i< Math.min(test.length, refCarre.length); i++){
+			diff = diff + (Math.abs(test[i].abs()-refCarre[i].abs()))/(Math.abs(test[i].abs()+refCarre[i].abs()));
 		}
+		if (diff<seuil){
+			estCarre=true;
+		}
+		return estCarre;
 	}
+	
+	public boolean comparaisonDescripteursRond(Complex[] test, float seuil){
+		boolean estRond = false; 
+		double diff=0;
+		for (int i=0; i< Math.min(test.length, refRond.length); i++){
+			diff = diff + (Math.abs(test[i].abs()-refCarre[i].abs()))/(Math.abs(test[i].abs()+refCarre[i].abs()));
+		}
+		if (diff<seuil){
+			estRond=true;
+		}
+		return estRond;
+	}
+	
+	public ArrayList<Rectangle> zonePlante(ArrayList<Complex[]> DF, ArrayList<ArrayList<Pixel>> contours, float seuil){
+		ArrayList<Rectangle> R= new ArrayList<Rectangle>();
+		for (int i = 0; i< DF.size();i++){
+			
+			if(comparaisonDescripteursCarre(DF.get(i),seuil)){
+				int xmax=-1;
+				int xmin=Integer.MAX_VALUE;
+				int ymax =0;
+				String carre= new String();
+				
+				for( Pixel p :contours.get(i)){
+					int x=p.getX();
+					int y=p.getY();
+					if(xmax<x){
+						xmax=x;
+					}
+					if(x<xmin){
+						xmin=x;
+					}
+					if(ymax<y){
+						ymax=y;
+					}
+					
+				}
+				Point p1 = new Point(xmin,0);
+				Point p2 = new Point(xmin,ymax);
+				Point p3 = new Point(xmax,0);
+				Point p4 = new Point(xmax,ymax);
+				Rectangle r = new Rectangle(p1,p2,p3,p4,carre );
+				R.add(r);
+			}
+			if(comparaisonDescripteursRond(DF.get(i),seuil)){
+				int xmax=-1;
+				int xmin=Integer.MAX_VALUE;
+				int ymax =0;
+				String rond= new String();
+				
+				for( Pixel p :contours.get(i)){
+					int x=p.getX();
+					int y=p.getY();
+					if(xmax<x){
+						xmax=x;
+					}
+					if(x<xmin){
+						xmin=x;
+					}
+					if(ymax<y){
+						ymax=y;
+					}
+					
+				}
+				Point p1 = new Point(xmin,0);
+				Point p2 = new Point(xmin,ymax);
+				Point p3 = new Point(xmax,0);
+				Point p4 = new Point(xmax,ymax);
+				Rectangle r = new Rectangle(p1,p2,p3,p4,rond );
+				R.add(r);
+				
+			}
+		}
+		return R;
+	}
+	
+	
+	
+	
+	
+	
+	
 }
 	
