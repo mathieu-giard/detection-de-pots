@@ -45,6 +45,35 @@ public class MainClass {
 		int rgb = color.getRGB();
 		img.setRGB(x, y, rgb);
 	}
+	
+	public void CreationDeCarre(){
+		for(int i = 200; i<300;i++){
+			for(int j=100;j<200;j++){
+				Color color = new Color(255, 215, 0);
+				int rgb = color.getRGB();
+				img.setRGB(i, j, rgb);
+			}
+		}
+	}
+	
+	public void CreationDeCarreEtRond(){
+		for(int i = 20; i<100;i++){
+			for(int j=100;j<180;j++){
+				Color color = new Color(245, 215, 0);
+				int rgb = color.getRGB();
+				img.setRGB(i, j, rgb);
+			}
+		}
+		for(int k=150;k<350;k++){
+			for(int h=50;h<250;h++){
+				if( Math.pow(k-250,2)+ Math.pow(h-150,2)<= 1000){
+					Color color = new Color(255, 215, 0);
+					int rgb = color.getRGB();
+					img.setRGB(k, h, rgb);
+				}
+			}
+		}
+	}
 
 	public void decodeimage(String filename) {
 		try {
@@ -90,7 +119,7 @@ public class MainClass {
 			}
 		}
 		// affiche choisi dans la console pour test
-		System.out.println(Choisi);
+		//System.out.println(Choisi);
 		return Choisi;
 	}
 
@@ -131,6 +160,11 @@ public class MainClass {
 			ArrayList<Pixel> cc = new ArrayList<Pixel>();
 			for (Pixel pixel3 : choisibis) {
 				if (pixel3.getNumeroPixel() == k) {
+					// pour les tests
+					Color color = new Color(k*100, 250, 200-30*k);
+					int rgb = color.getRGB();
+					img.setRGB(pixel3.getX(), pixel3.getY(), rgb);
+					
 					cc.add(pixel3);
 				}
 			}
