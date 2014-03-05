@@ -23,7 +23,7 @@ public class MainClass {
 		ArrayList<Pixel> s = selec(seuilTinf, seuilTsup, seuilS, seuilL,
 				seuilL2);
 		ArrayList<ArrayList<Pixel>> t = ComposantesConnexes(s);
-		ArrayList<ArrayList<Pixel>> u = Contours(t);
+		ArrayList<ArrayList<Pixel>> u = Contours(t,s);
 		ArrayList<ArrayList<Point>> v = signature(u);
 		ArrayList<Complex[]> w = descripteursDeFourier(v);
 		ArrayList<Rectangle> ResultatFinal = zonePlante(w, u,
@@ -162,6 +162,7 @@ public class MainClass {
 				if (pixel3.getNumeroPixel() == k) {
 					// pour les tests
 					Color color = new Color(k*100, 250, 200-30*k);
+					//Color color = new Color(255,255,255);
 					int rgb = color.getRGB();
 					img.setRGB(pixel3.getX(), pixel3.getY(), rgb);
 					
@@ -177,32 +178,31 @@ public class MainClass {
 		return CC;
 	}
 
-	public boolean BelongsTocc(Pixel pixel, ArrayList<Pixel> cc) {
-		boolean b = false;
-		for (Pixel p : cc) {
-			if (pixel == p) {
-				b = true;
-			}
-		}
-		return b;
-	}
+	
 
-	public ArrayList<ArrayList<Pixel>> Contours(ArrayList<ArrayList<Pixel>> CC) {
+	public ArrayList<ArrayList<Pixel>> Contours(ArrayList<ArrayList<Pixel>> CC , ArrayList<Pixel> choisi) {
 		ArrayList<ArrayList<Pixel>> CONTOURS = new ArrayList<ArrayList<Pixel>>();
-		ArrayList<Pixel> contours = new ArrayList<Pixel>();
+		
 		for (ArrayList<Pixel> aa : CC) {
+			ArrayList<Pixel> contours = new ArrayList<Pixel>();
 			for (Pixel P : aa) {
-				if (BelongsTocc(P, aa) == false) {
-					if (BelongsTocc(P.pixelVoisinDroite(img), aa) == true
-							|| BelongsTocc(P.pixelVoisinGauche(img), aa) == true
-							|| BelongsTocc(P.pixelVoisinHaut(img), aa) == true
-							|| BelongsTocc(P.pixelVoisinBas(img), aa) == true) {
+				
+					if (P.pixelVoisinDroite(img,choisi).BelongsTocc(aa) == false
+							|| P.pixelVoisinGauche(img,choisi).BelongsTocc(aa) == false
+							|| P.pixelVoisinBas(img,choisi).BelongsTocc(aa) == false
+							|| P.pixelVoisinHaut(img,choisi).BelongsTocc(aa) == false) {
+						// Pour le test:
+						Color color = new Color(255, 0,0);
+						int rgb = color.getRGB();
+						img.setRGB(P.getX(), P.getY(), rgb);
 						contours.add(P);
 					}
-				}
+				
 			}
+			System.out.println(contours.size());
 			CONTOURS.add(contours);
 		}
+		System.out.println(CONTOURS.size());
 		return CONTOURS;
 	}
 

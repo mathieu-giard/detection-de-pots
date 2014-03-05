@@ -104,6 +104,19 @@ public class Pixel {
 		return V;
 	}
 
+	
+	public boolean BelongsTocc(ArrayList<Pixel> cc) {
+		boolean b = false;
+		for (Pixel p : cc) {
+			if (this == p) {
+				b = true;
+			}
+		}
+		return b;
+	}
+	
+	
+	
 	public int getNumeroPixel() {
 		return nP;
 	}

@@ -22,6 +22,10 @@ public class Main {
 		
 		ArrayList<ArrayList<Pixel>> CC=mc.ComposantesConnexes(choisi);
 		mc.outPutImage("testCC");
+		// LES COMPOSANTES CONNEXES MARCHENT
+		
+		ArrayList<ArrayList<Pixel>> Contours = mc.Contours(CC,choisi);
+		mc.outPutImage("testContours");
 		
 	}
 
