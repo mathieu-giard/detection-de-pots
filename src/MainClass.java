@@ -168,12 +168,12 @@ public class MainClass {
 					cc.add(pixel3);
 				}
 			}
-			if (cc != null) {
+			if (cc.size() != 0) {
 				CC.add(cc);
 			}
 		}
 
-		System.out.println(CC);
+		System.out.println(CC.size());
 		return CC;
 	}
 
