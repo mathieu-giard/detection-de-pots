@@ -42,6 +42,15 @@ public class Pixel {
 	public int getY() {
 		return y;
 	}
+	public double getT(){
+		return T;
+	}
+	public double getS(){
+		return S;
+	}
+	public double getL(){
+		return L;
+	}
 
 	// tentative de modif
 	public Pixel pixelVoisinGauche(BufferedImage img, ArrayList<Pixel> choisibis) {

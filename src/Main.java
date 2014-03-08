@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.ArrayList;
 
 
@@ -9,8 +10,13 @@ public class Main {
 		
 		//création d'un carré parfait
 		
+		// pour trouver les bons seuils
+		//mc.decodeimage("testjaune.png");
+		//mc.TSL(230, 150);
 		
+		//mc.testarctan();
 		
+		/*
 		mc.decodeimage("pagevierge.png");
 		mc.CreationDeCarreEtRond();
 		mc.outPutImage("carré_et_rond_parfait");
@@ -23,10 +29,31 @@ public class Main {
 		ArrayList<ArrayList<Pixel>> CC=mc.ComposantesConnexes(choisi);
 		mc.outPutImage("testCC");
 		// LES COMPOSANTES CONNEXES MARCHENT
+		*/
+		mc.decodeimage("pagevierge.png");
+		mc.CreationDeRond();
+		mc.outPutImage("rond_parfait");
+		mc.decodeimage("rond_parfait");
+		ArrayList<Pixel> choisi = mc.selec(0, 360, 0, 0, 100);
+		mc.outPutImage("rondPSegm");
+		ArrayList<ArrayList<Pixel>> CC=mc.ComposantesConnexes(choisi);
+		mc.outPutImage("rondCC");
+		ArrayList<Point[]> signature = mc.SIGNATURE(CC);
 		
+		/*
 		ArrayList<ArrayList<Pixel>> Contours = mc.Contours(CC,choisi);
 		mc.outPutImage("testContours");
+		// LES CONTOURS MARCHENT*/
 		
+		
+		
+		/* *******
+		mc.decodeimage("carré_et_rond_parfait");
+		ArrayList<Pixel> choisi = mc.selec(0.1, 0.25, 0, 0 , 1);
+		mc.outPutImage("resultat_poussin");
+		ArrayList<ArrayList<Pixel>> CC=mc.ComposantesConnexes(choisi);
+		mc.outPutImage("poussinCC");
+		*** */
 	}
 
 }

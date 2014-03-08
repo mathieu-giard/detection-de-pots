@@ -16,6 +16,7 @@ public class MainClass {
 	private Complex[] refCarre;
 	private Complex[] refRond;
 
+	/*
 	public ArrayList<Rectangle> mainAlgo(String filename, int seuilTinf,
 			int seuilTsup, int seuilS, int seuilL, int seuilL2,
 			int seuilTestRondCarre) {
@@ -29,7 +30,7 @@ public class MainClass {
 		ArrayList<Rectangle> ResultatFinal = zonePlante(w, u,
 				seuilTestRondCarre);
 		return ResultatFinal;
-	}
+	}*/
 
 	public void outPutImage(String fileName) {
 		File outputfile = new File(fileName);
@@ -44,6 +45,19 @@ public class MainClass {
 		Color color = new Color(0, 0, 0);
 		int rgb = color.getRGB();
 		img.setRGB(x, y, rgb);
+	}
+	
+	public void TSL(int x,int y){
+		Color c = new Color(img.getRGB(x, y));// prendre des valeurs RGB
+		// de chaque pixel
+		int r = c.getRed();
+		int g = c.getGreen();
+		int b = c.getBlue();
+
+		float[] hsb = Color.RGBtoHSB(r, g, b, null);
+		System.out.println(hsb[0]);
+		System.out.println(hsb[1]);
+		System.out.println(hsb[2]);
 	}
 	
 	public void CreationDeCarre(){
@@ -74,6 +88,29 @@ public class MainClass {
 			}
 		}
 	}
+	
+	public void CreationDeRond(){
+		/*
+		for(int k=150;k<170;k++){
+			for(int h=50;h<70;h++){
+				if( Math.pow(k-160,2)+ Math.pow(h-60,2)<= 100){
+					Color color = new Color(255, 215, 0);
+					int rgb = color.getRGB();
+					img.setRGB(k, h, rgb);
+				}
+			}
+			
+		}*/
+		for(int k=150;k<350;k++){
+			for(int h=50;h<250;h++){
+				if( Math.pow(k-250,2)+ Math.pow(h-150,2)<= 1000){
+					Color color = new Color(255, 215, 0);
+					int rgb = color.getRGB();
+					img.setRGB(k, h, rgb);
+				}
+			}
+		}
+	}
 
 	public void decodeimage(String filename) {
 		try {
@@ -87,8 +124,8 @@ public class MainClass {
 		}
 	}
 
-	public ArrayList<Pixel> selec(int seuilTinf, int seuilTsup, int seuilS,
-			int seuilL1, int seuilL2) {
+	public ArrayList<Pixel> selec(double seuilTinf, double seuilTsup, double seuilS,
+			double seuilL1, double seuilL2) {
 		// selection des bons pixels
 		ArrayList<Pixel> Choisi = new ArrayList<Pixel>();
 
@@ -161,8 +198,8 @@ public class MainClass {
 			for (Pixel pixel3 : choisibis) {
 				if (pixel3.getNumeroPixel() == k) {
 					// pour les tests
-					Color color = new Color(k*100, 250, 200-30*k);
-					//Color color = new Color(255,255,255);
+					//Color color = new Color(k*100, 250, 200-30*k);
+					Color color = new Color(k*20%255,125+(-1)^k*10*k%255,255-20*k%255);
 					int rgb = color.getRGB();
 					img.setRGB(pixel3.getX(), pixel3.getY(), rgb);
 					
@@ -236,6 +273,95 @@ public class MainClass {
 		return COURBE;
 	}
 
+	
+	public ArrayList<Point[]> SIGNATURE(ArrayList<ArrayList<Pixel>> CC){
+		ArrayList<Point[]> signDiscrete = new ArrayList<Point[]>();
+		
+		for (ArrayList<Pixel> cc : CC) {
+			Point [] sign = new Point[72]; //72=360/5 on échantillonne tous les 5 degrés
+			int seuil = 2;
+			int Sx = 0;
+			int Sy = 0;
+			
+			for (Pixel pixel : cc) {
+				Sx = Sx + pixel.getX();
+				Sy = Sy + pixel.getY();
+			}
+
+			Sx = (int) Sx / cc.size();
+			Sy = (int) Sy / cc.size();
+			
+			
+			for (int i =-180; i<180; i=i+5){
+				double r=0;
+				double theta=0;
+				for (Pixel pix : cc){
+					double a = pix.getY() - Sy;
+					double b = pix.getX() - Sx;
+					
+					if (b > 0 ){
+						double c = a/b;
+						theta = 360/(2*Math.PI)* Math.atan( c );
+					
+						if ( theta < i + seuil && theta > i- seuil){
+						
+							double R = Math.sqrt( Math.pow(a, 2) + Math.pow(b, 2));
+							r= Math.max (r,R);
+						}
+					}
+					if(b<0){
+						double c = a/b;
+						if (a>0){
+							theta = 180 + 360/(2*Math.PI)* Math.atan( c );
+							if ( theta < i + seuil && theta > i- seuil){
+								
+								double R = Math.sqrt( Math.pow(a, 2) + Math.pow(b, 2));
+								r= Math.max (r,R);
+							}
+						}
+						if(a<0){
+							theta = - 180 + 360/(2*Math.PI)* Math.atan( c );
+							if ( theta < i + seuil && theta > i- seuil){
+								
+								double R = Math.sqrt( Math.pow(a, 2) + Math.pow(b, 2));
+								r= Math.max (r,R);
+							}
+						}
+					}
+					else if(a !=0 && b==0){
+						int L = Integer.MAX_VALUE;
+						int c = (int) (a /Math.abs(a));
+						int d = c*L;
+						theta = 360/(2*Math.PI)* Math.atan( d );
+						
+						if ( theta < i+seuil && theta > i-seuil){
+							
+							double R = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+							r= Math.max (r,R);
+						}
+					}
+					else{ }
+				}
+				Point P = new Point((int) r,i);
+				//P.setLocation(r,i);
+				sign[i/5+36] = P; //36=180/5
+			}	
+			
+			System.out.println(sign[36].getX());
+			System.out.println(sign[36].getY());
+			signDiscrete.add(sign);
+						
+			
+			
+		}
+		return signDiscrete;
+	}
+	
+	public void testarctan(){
+		double a =360/(2*Math.PI)* Math.atan(1.02);
+		System.out.println(a);
+	}
+	
 	/*
 	 * public void paint(ArrayList<ArrayList<Point>> COURBE, Graphics g){ for
 	 * (ArrayList<Point> C: COURBE){ for (int i=0 ; i< C.size()-1; i++){ double
@@ -246,8 +372,7 @@ public class MainClass {
 	 * } } }
 	 */
 
-	public ArrayList<Complex[]> descripteursDeFourier(
-			ArrayList<ArrayList<Point>> COURBE) {
+	public ArrayList<Complex[]> descripteursDeFourier(ArrayList<Point[]> COURBE) {
 		FastFourierTransformer math = new FastFourierTransformer(
 				DftNormalization.UNITARY);
 		// XYSeries serie = this.audioData.getSeries(0);
@@ -255,11 +380,12 @@ public class MainClass {
 		// double step = (double) sampleRate;
 		// double x=0.;
 		ArrayList<Complex[]> Coef = new ArrayList<Complex[]>();
-		for (ArrayList<Point> courbe : COURBE) {
-			double[][] serie = new double[courbe.size()][2];
-			for (int j = 0; j < courbe.size(); j++) {
-				serie[j][0] = courbe.get(j).getX();
-				serie[j][1] = courbe.get(j).getY();
+		for (Point[] courbe : COURBE) {
+			
+			double[][] serie = new double[360][2];
+			for (int j = 0; j < 360; j++) {
+				serie[j][0] = courbe[j].getX();
+				serie[j][1] = courbe[j].getY();
 			}
 			int k = (int) Math.ceil(Math.log(serie.length) / Math.log(2));
 
@@ -286,8 +412,8 @@ public class MainClass {
 	public boolean comparaisonDescripteursCarre(Complex[] test, float seuil) {
 		boolean estCarre = false;
 		double diff = 0;
-		for (int i = 0; i < Math.min(test.length, refCarre.length); i++) {
-			diff = diff + (Math.abs(test[i].abs() - refCarre[i].abs()))
+		for (int i = 2; i < Math.min(test.length, refCarre.length); i++) { // commence à deux pour ne pas prendre en compte la taille du carre
+			diff = diff + 1/i * (Math.abs(test[i].abs() - refCarre[i].abs())) // 1/i signifie que les coeff de f les plus gd(loin) sont - imp ce st du detail
 					/ (Math.abs(test[i].abs() + refCarre[i].abs()));
 		}
 		if (diff < seuil) {
