@@ -18,21 +18,43 @@ public class MainClass {
 	private Point[] signCarre;
 	private Point[] signRond;
 
-	/*
-	public ArrayList<Rectangle> mainAlgo(String filename, int seuilTinf,
-			int seuilTsup, int seuilS, int seuilL, int seuilL2,
-			int seuilTestRondCarre) {
-		decodeimage(filename);
-		ArrayList<Pixel> s = selec(seuilTinf, seuilTsup, seuilS, seuilL,
-				seuilL2);
+	
+	public ArrayList<Rectangle> mainAlgo(String filename1, String filename2, double d,
+			double e, double f, double g, double h, double seuilCarre) {
+		
+		this.decodeimage(filename1);
+		this.CreationDeCarreEtRond();
+		this.outPutImage("carré_et_rond_parfait");
+		this.decodeimage("carré_et_rond_parfait");
+		ArrayList<Pixel> choisi = this.selec(0, 360, 0, 0, 100);
+		this.outPutImage("carréPSegm");
+		ArrayList<ArrayList<Pixel>> CC=this.ComposantesConnexes(choisi);
+		this.outPutImage("carréCC");
+		ArrayList<Point[]> signature = this.SIGNATURE(CC);
+		this.setSignCarre(signature.get(0));
+		// on a initialisé l'attribu signCarré qui va servir de référence
+		
+		this.decodeimage(filename2);
+		ArrayList<Pixel> choisi2 = this.selec(d,e,f, g,h);
+		this.outPutImage("img-carré3-segm");
+		ArrayList<ArrayList<Pixel>> CC2=this.ComposantesConnexes(choisi2);
+		this.outPutImage("img-carré3-compConn");
+		ArrayList<Point[]> signature2 = this.SIGNATURE(CC2);
+		ArrayList<Rectangle> R = this.zonePlante(signature2, CC2,seuilCarre);
+		this.MiseEnEvidenceDuCarre(R);
+		this.outPutImage("zone_rendue3");
+		return R;
+		
+		/*ArrayList<Pixel> s = this.selec(seuilTinf, seuilTsup, seuilS, seuilL,seuilL2);
+		
 		ArrayList<ArrayList<Pixel>> t = ComposantesConnexes(s);
-		ArrayList<ArrayList<Pixel>> u = Contours(t,s);
-		ArrayList<ArrayList<Point>> v = signature(u);
-		ArrayList<Complex[]> w = descripteursDeFourier(v);
-		ArrayList<Rectangle> ResultatFinal = zonePlante(w, u,
+		
+		ArrayList<ArrayList<Point>> v = ;
+		
+		ArrayList<Rectangle> ResultatFinal = zonePlante(
 				seuilTestRondCarre);
-		return ResultatFinal;
-	}*/
+		return ResultatFinal;*/
+	}
 
 	public void outPutImage(String fileName) {
 		File outputfile = new File(fileName);
@@ -546,12 +568,12 @@ public class MainClass {
 	
 	
 	public ArrayList<Rectangle> zonePlante(ArrayList<Point[]> Sign,
-			ArrayList<ArrayList<Pixel>> compConn) {
+			ArrayList<ArrayList<Pixel>> compConn,double seuilCarre) {
 		
 		ArrayList<Rectangle> R = new ArrayList<Rectangle>();
 		for (int i = 0; i < Sign.size(); i++) {
 
-			if (this.IsCarre(Sign.get(i), 8)) {
+			if (this.IsCarre(Sign.get(i), seuilCarre)) { 
 				int xmax = -1;
 				int xmin = Integer.MAX_VALUE;
 				int ymax = 0;
@@ -573,14 +595,19 @@ public class MainClass {
 					
 					
 				}
-				xmin= (int) xmin-xmin/4;
-				xmax= xmax+xmin/3;
+				int delta = xmax- xmin;
+				xmin= (int) xmin-delta/2;
+				int xgch= Math.max(xmin,0);
+				xmax= (int) xmax+delta/2;
+				int xim =img.getWidth()-1;
+				int xdt = Math.min(xmax,xim);
+				
 				
 				System.out.println(xmin+"  " + xmax+ "  "+ ymax);
-				Point p1 = new Point(xmin, 0);
-				Point p2 = new Point(xmin, ymax);
-				Point p3 = new Point(xmax, 0);
-				Point p4 = new Point(xmax, ymax);
+				Point p1 = new Point(xgch, 0);
+				Point p2 = new Point(xgch, ymax);
+				Point p3 = new Point(xdt, 0);
+				Point p4 = new Point(xdt, ymax);
 				Rectangle r = new Rectangle(p1, p2, p3, p4, carre);
 				R.add(r);
 			}
@@ -620,25 +647,27 @@ public class MainClass {
 	}
 	
 	
-	public void MiseEnEvidenceDuCarre(Rectangle R){
-		int xmin = (int) Math.round(R.getP1().getX());
-		int xmax = (int) Math.round(R.getP4().getX());
-		int ymax = (int) Math.round(R.getP4().getY());
-		
-		for(int i = xmin; i< xmax; i++){
-			Color color = new Color(255, 0, 0);
-			int rgb = color.getRGB();
-			img.setRGB(i, 0, rgb);
-			img.setRGB(i, ymax, rgb);
-		}
-		for(int i = 0; i< ymax; i++){
-			Color color = new Color(255, 0, 0);
-			int rgb = color.getRGB();
-			img.setRGB(xmin, i, rgb);
-			img.setRGB(xmax, i, rgb);
-		}
+	public void MiseEnEvidenceDuCarre(ArrayList<Rectangle> Rect){
+		for(Rectangle R : Rect){
+			int xmin = (int) Math.round(R.getP1().getX());
+			int xmax = (int) Math.round(R.getP4().getX());
+			int ymax = (int) Math.round(R.getP4().getY());
 		
 		
+			for(int i = xmin; i< xmax; i++){
+				Color color = new Color(255, 0, 0);
+				int rgb = color.getRGB();
+				img.setRGB(i, 0, rgb);
+				img.setRGB(i, ymax, rgb);
+			}
+			for(int i = 0; i< ymax; i++){
+				Color color = new Color(255, 0, 0);
+				int rgb = color.getRGB();
+				img.setRGB(xmin, i, rgb);
+				img.setRGB(xmax, i, rgb);
+			}
+		
+		}	
 	}
 	
 	

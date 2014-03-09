@@ -6,6 +6,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		MainClass mc = new MainClass();
+		
+		/*
 		MainClass mc2 = new MainClass();
 	
 		
@@ -76,7 +78,7 @@ public class Main {
 		mc.outPutImage("rondCC");
 		ArrayList<Point[]> signature = mc.SIGNATURE(CC);
 		*/
-		
+		/*
 		//initialisation
 		mc.decodeimage("pagevierge.png");
 		mc.CreationDeCarreEtRond();
@@ -193,16 +195,17 @@ public class Main {
 	System.out.println("jaune sticker");
 	mc2.TSL(262, 397);
 	// */
-		
+	/*	
 	// TEST GRANDEUR NATURE
 	System.out.println("DEBUT TEST");
 	
-	mc2.decodeimage("img-carré3.png");
-	ArrayList<Pixel> choisi2 = mc2.selec(0.85, 1.05, 0.05, 0.15, 0.4);
-	mc2.outPutImage("img-carré3-segm");
-	ArrayList<ArrayList<Pixel>> CC2=mc2.ComposantesConnexes(choisi2);
-	mc2.outPutImage("img-carré3-compConn");
-	ArrayList<Point[]> signature2 = mc2.SIGNATURE(CC2);
+	mc.decodeimage("img-carré3.png");
+	ArrayList<Pixel> choisi2 = mc.selec(0.85, 1.05, 0.05, 0.15, 0.4);
+	mc.outPutImage("img-carré3-segm");
+	ArrayList<ArrayList<Pixel>> CC2=mc.ComposantesConnexes(choisi2);
+	mc.outPutImage("img-carré3-compConn");
+	ArrayList<Point[]> signature2 = mc.SIGNATURE(CC2);
+	/*
 	mc2.ChangeCouleurZone(CC2.get(0));
 	mc2.ChangeCouleurZone2(CC2.get(1));
 	mc2.ChangeCouleurZone2(CC2.get(2));
@@ -211,10 +214,12 @@ public class Main {
 	mc2.ChangeCouleurZone2(CC2.get(5));
 	mc2.ChangeCouleurZone2(CC2.get(6));
 	mc2.ChangeCouleurZone2(CC2.get(7));
-	mc2.outPutImage("zoneDontOnTesteSiCEstUnCarre");
+	//*/
+	//mc2.outPutImage("zoneDontOnTesteSiCEstUnCarre");
+	/*
 	ArrayList<Rectangle> R = mc.zonePlante(signature2, CC2);
-	mc2.MiseEnEvidenceDuCarre(R.get(0));
-	mc2.outPutImage("zone_rendue");
+	mc.MiseEnEvidenceDuCarre(R);
+	mc.outPutImage("zone_rendue3");
 	
 	/*
 	boolean carré1 = mc.IsCarre(signature2.get(0), 0.8 *10);
@@ -241,7 +246,7 @@ public class Main {
 	
 	
 	
-	
+	mc.mainAlgo("pagevierge.png","img-carré3.png", 0.85, 1.05, 0.05, 0.15, 0.4,8);
 	
 	}
 
