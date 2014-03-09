@@ -15,6 +15,8 @@ public class MainClass {
 	private BufferedImage img;
 	private Complex[] refCarre;
 	private Complex[] refRond;
+	private Point[] signCarre;
+	private Point[] signRond;
 
 	/*
 	public ArrayList<Rectangle> mainAlgo(String filename, int seuilTinf,
@@ -347,8 +349,8 @@ public class MainClass {
 				sign[i/5+36] = P; //36=180/5
 			}	
 			
-			System.out.println(sign[36].getX());
-			System.out.println(sign[36].getY());
+			System.out.println(sign[55].getX());
+			System.out.println(sign[38].getY());
 			signDiscrete.add(sign);
 						
 			
@@ -435,6 +437,86 @@ public class MainClass {
 		return estRond;
 	}
 
+	
+	
+	public double moyenne(){
+		double g =0;
+		for (int i=0; i< this.signCarre.length;i++){
+			g=g+this.signCarre[i].getX();
+		}
+		g=g/this.signCarre.length;
+		return g;
+	}
+	
+	public boolean IsCarre( Point[] signature, int seuil){
+		boolean EstCarre= false;
+		double C=0;
+		
+		double f =0; //moyenne de la signature
+		for (int i=0; i< signature.length;i++){
+			f=f+signature[i].getX();
+		}
+		f=f/signature.length;
+		
+		double g =0; //moyenne de la signature témoin
+		for (int i=0; i< this.signCarre.length;i++){
+			g=g+this.signCarre[i].getX();
+		}
+		g=g/this.signCarre.length;
+		
+		double sigma1=0; // ecart type de la signature
+		for (int i=0; i< signature.length;i++){
+			sigma1=sigma1+Math.pow((signature[i].getX()-f),2);
+		}
+		sigma1= sigma1/signature.length;
+		sigma1= Math.sqrt(sigma1);
+		
+		double sigma2=0; // ecart type de la signature témoin
+		for (int i=0; i< this.signCarre.length;i++){
+			sigma2=sigma2+Math.pow((this.signCarre[i].getX()-f),2);
+		}
+		sigma2= sigma2/this.signCarre.length;
+		sigma2= Math.sqrt(sigma2);
+		
+		for (int k=0; k<72; k++){
+			double Ck=0;
+			for(int i=0; i<72;i++){
+				Ck= (signature[(i+k)%72].getX()-f)*(this.signCarre[i].getX()-g);
+			}
+			Ck=Ck/(sigma1*sigma2);
+			C= Math.max(Ck, C);	
+		}
+		if(C>seuil){
+			EstCarre=true;
+		}
+				
+		return EstCarre;
+	}
+	
+	
+	
+	public boolean IsRond(Point[] signature, double seuil){
+		boolean EstRond = false;
+		double f =0; //moyenne de la signature
+		for (int i=0; i< signature.length;i++){
+			f=f+signature[i].getX();
+		}
+		f=f/signature.length;
+		
+		double sigma1=0; // ecart type de la signature
+		for (int i=0; i< signature.length;i++){
+			sigma1=sigma1+Math.pow((signature[i].getX()-f),2);
+		}
+		sigma1= sigma1/signature.length;
+		sigma1= Math.sqrt(sigma1);
+		
+		if(sigma1<seuil){
+			EstRond=true;
+		}
+		return EstRond;
+	}
+	
+	
 	public ArrayList<Rectangle> zonePlante(ArrayList<Complex[]> DF,
 			ArrayList<ArrayList<Pixel>> contours, float seuil) {
 		ArrayList<Rectangle> R = new ArrayList<Rectangle>();
@@ -499,4 +581,7 @@ public class MainClass {
 		return R;
 	}
 
+	
+	
+	
 }
