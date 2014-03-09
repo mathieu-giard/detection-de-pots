@@ -42,11 +42,24 @@ public class MainClass {
 			e.printStackTrace();
 		}
 	}
+	
+	public void setSignCarre(Point[] p){
+		this.signCarre = p;
+	}
 
 	public void Nimp(int x, int y) {
 		Color color = new Color(0, 0, 0);
 		int rgb = color.getRGB();
 		img.setRGB(x, y, rgb);
+	}
+	
+	public void ChangeCouleurZone(ArrayList<Pixel> zone){
+		Color color = new Color(0, 255, 0);
+		int rgb = color.getRGB();
+		for(Pixel p : zone){
+		img.setRGB(p.getX(), p.getY(), rgb);
+	
+		}
 	}
 	
 	public void TSL(int x,int y){
@@ -65,7 +78,7 @@ public class MainClass {
 	public void CreationDeCarre(){
 		for(int i = 200; i<300;i++){
 			for(int j=100;j<200;j++){
-				Color color = new Color(255, 215, 0);
+				Color color = new Color(245, 215, 0);
 				int rgb = color.getRGB();
 				img.setRGB(i, j, rgb);
 			}
@@ -158,12 +171,11 @@ public class MainClass {
 			}
 		}
 		// affiche choisi dans la console pour test
-		//System.out.println(Choisi);
+		System.out.println(Choisi.size());
 		return Choisi;
 	}
 
-	public ArrayList<ArrayList<Pixel>> ComposantesConnexes(
-			ArrayList<Pixel> choisi) {
+	public ArrayList<ArrayList<Pixel>> ComposantesConnexes(ArrayList<Pixel> choisi) {
 		int i = 0;
 		int L = Integer.MAX_VALUE;
 		ArrayList<ArrayList<Pixel>> CC = new ArrayList<ArrayList<Pixel>>();
@@ -208,7 +220,7 @@ public class MainClass {
 					cc.add(pixel3);
 				}
 			}
-			if (cc.size() != 0) {
+			if (cc.size() > 50) { // on elimine les petites taches inutiles
 				CC.add(cc);
 			}
 		}
@@ -277,6 +289,7 @@ public class MainClass {
 
 	
 	public ArrayList<Point[]> SIGNATURE(ArrayList<ArrayList<Pixel>> CC){
+		
 		ArrayList<Point[]> signDiscrete = new ArrayList<Point[]>();
 		
 		for (ArrayList<Pixel> cc : CC) {
@@ -349,8 +362,8 @@ public class MainClass {
 				sign[i/5+36] = P; //36=180/5
 			}	
 			
-			System.out.println(sign[55].getX());
-			System.out.println(sign[38].getY());
+			//System.out.println(sign[55].getX());
+			//System.out.println(sign[38].getY());
 			signDiscrete.add(sign);
 						
 			
@@ -448,7 +461,9 @@ public class MainClass {
 		return g;
 	}
 	
-	public boolean IsCarre( Point[] signature, int seuil){
+	
+	
+	public boolean IsCarre( Point[] signature, double seuil){
 		boolean EstCarre= false;
 		double C=0;
 		
@@ -481,11 +496,13 @@ public class MainClass {
 		for (int k=0; k<72; k++){
 			double Ck=0;
 			for(int i=0; i<72;i++){
-				Ck= (signature[(i+k)%72].getX()-f)*(this.signCarre[i].getX()-g);
+				Ck= Ck + (signature[(i+k)%72].getX()-f)*(this.signCarre[i].getX()-g);
 			}
 			Ck=Ck/(sigma1*sigma2);
+			//if (Ck<0){ Ck = - Ck ;} //je suis pas sûr qu'il faille prendre la val abs mais 
 			C= Math.max(Ck, C);	
 		}
+		System.out.println("C vaut  " + C + "  le seuil est  " + seuil);
 		if(C>seuil){
 			EstCarre=true;
 		}
@@ -510,6 +527,7 @@ public class MainClass {
 		sigma1= sigma1/signature.length;
 		sigma1= Math.sqrt(sigma1);
 		
+		System.out.println("sigma vaut " + sigma1 + "   le seuil est " + seuil);
 		if(sigma1<seuil){
 			EstRond=true;
 		}
