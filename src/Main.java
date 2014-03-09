@@ -212,8 +212,9 @@ public class Main {
 	mc2.ChangeCouleurZone2(CC2.get(6));
 	mc2.ChangeCouleurZone2(CC2.get(7));
 	mc2.outPutImage("zoneDontOnTesteSiCEstUnCarre");
-	mc.zonePlante(signature2, CC2);
-	
+	ArrayList<Rectangle> R = mc.zonePlante(signature2, CC2);
+	mc2.MiseEnEvidenceDuCarre(R.get(0));
+	mc2.outPutImage("zone_rendue");
 	
 	/*
 	boolean carré1 = mc.IsCarre(signature2.get(0), 0.8 *10);

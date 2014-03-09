@@ -570,7 +570,12 @@ public class MainClass {
 						ymax = y;
 					}
 
+					
+					
 				}
+				xmin= (int) xmin-xmin/4;
+				xmax= xmax+xmin/3;
+				
 				System.out.println(xmin+"  " + xmax+ "  "+ ymax);
 				Point p1 = new Point(xmin, 0);
 				Point p2 = new Point(xmin, ymax);
@@ -611,6 +616,28 @@ public class MainClass {
 		} // */
 		}
 		return R;
+		
+	}
+	
+	
+	public void MiseEnEvidenceDuCarre(Rectangle R){
+		int xmin = (int) Math.round(R.getP1().getX());
+		int xmax = (int) Math.round(R.getP4().getX());
+		int ymax = (int) Math.round(R.getP4().getY());
+		
+		for(int i = xmin; i< xmax; i++){
+			Color color = new Color(255, 0, 0);
+			int rgb = color.getRGB();
+			img.setRGB(i, 0, rgb);
+			img.setRGB(i, ymax, rgb);
+		}
+		for(int i = 0; i< ymax; i++){
+			Color color = new Color(255, 0, 0);
+			int rgb = color.getRGB();
+			img.setRGB(xmin, i, rgb);
+			img.setRGB(xmax, i, rgb);
+		}
+		
 		
 	}
 	
