@@ -204,7 +204,18 @@ public class Main {
 	mc2.outPutImage("img-carré3-compConn");
 	ArrayList<Point[]> signature2 = mc2.SIGNATURE(CC2);
 	mc2.ChangeCouleurZone(CC2.get(0));
+	mc2.ChangeCouleurZone2(CC2.get(1));
+	mc2.ChangeCouleurZone2(CC2.get(2));
+	mc2.ChangeCouleurZone2(CC2.get(3));
+	mc2.ChangeCouleurZone2(CC2.get(4));
+	mc2.ChangeCouleurZone2(CC2.get(5));
+	mc2.ChangeCouleurZone2(CC2.get(6));
+	mc2.ChangeCouleurZone2(CC2.get(7));
 	mc2.outPutImage("zoneDontOnTesteSiCEstUnCarre");
+	mc.zonePlante(signature2, CC2);
+	
+	
+	/*
 	boolean carré1 = mc.IsCarre(signature2.get(0), 0.8 *10);
 	System.out.println("carré1 "+carré1);
 	boolean rond1 = mc.IsRond(signature2.get(0), 0.4 *10);

@@ -62,6 +62,16 @@ public class MainClass {
 		}
 	}
 	
+	public void ChangeCouleurZone2(ArrayList<Pixel> zone){
+		Color color = new Color(0, 0, 0);
+		int rgb = color.getRGB();
+		for(Pixel p : zone){
+		img.setRGB(p.getX(), p.getY(), rgb);
+	
+		}
+	}
+	
+	
 	public void TSL(int x,int y){
 		Color c = new Color(img.getRGB(x, y));// prendre des valeurs RGB
 		// de chaque pixel
@@ -535,18 +545,19 @@ public class MainClass {
 	}
 	
 	
-	public ArrayList<Rectangle> zonePlante(ArrayList<Complex[]> DF,
-			ArrayList<ArrayList<Pixel>> contours, float seuil) {
+	public ArrayList<Rectangle> zonePlante(ArrayList<Point[]> Sign,
+			ArrayList<ArrayList<Pixel>> compConn) {
+		
 		ArrayList<Rectangle> R = new ArrayList<Rectangle>();
-		for (int i = 0; i < DF.size(); i++) {
+		for (int i = 0; i < Sign.size(); i++) {
 
-			if (comparaisonDescripteursCarre(DF.get(i), seuil)) {
+			if (this.IsCarre(Sign.get(i), 8)) {
 				int xmax = -1;
 				int xmin = Integer.MAX_VALUE;
 				int ymax = 0;
-				String carre = new String();
+				String carre = new String("carré");
 
-				for (Pixel p : contours.get(i)) {
+				for (Pixel p : compConn.get(i)) {
 					int x = p.getX();
 					int y = p.getY();
 					if (xmax < x) {
@@ -560,6 +571,7 @@ public class MainClass {
 					}
 
 				}
+				System.out.println(xmin+"  " + xmax+ "  "+ ymax);
 				Point p1 = new Point(xmin, 0);
 				Point p2 = new Point(xmin, ymax);
 				Point p3 = new Point(xmax, 0);
@@ -567,6 +579,7 @@ public class MainClass {
 				Rectangle r = new Rectangle(p1, p2, p3, p4, carre);
 				R.add(r);
 			}
+			/*
 			if (comparaisonDescripteursRond(DF.get(i), seuil)) {
 				int xmax = -1;
 				int xmin = Integer.MAX_VALUE;
@@ -595,10 +608,11 @@ public class MainClass {
 				R.add(r);
 
 			}
+		} // */
 		}
 		return R;
+		
 	}
-
 	
 	
 	
