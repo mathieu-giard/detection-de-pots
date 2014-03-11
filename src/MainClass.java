@@ -11,6 +11,10 @@ import javax.imageio.ImageIO;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.*;
 
+import pactutils.Pixel;
+import pactutils.Rectangle;
+
+
 public class MainClass {
 	private BufferedImage img;
 	private Complex[] refCarre;
@@ -139,9 +143,9 @@ public class MainClass {
 
 	public void decodeimage(String filename) {
 		try {
-			// la mÔøΩthode statique ÔøΩread de la classe javax.imageio.ImageIO
+			// la m√©thode statique √©read de la classe javax.imageio.ImageIO
 			// renvoie
-			// une instance de la classe BufferedImage (qui ÔøΩtend la classe
+			// une instance de la classe BufferedImage (qui √©tend la classe
 			// abstraite Image).
 			img = ImageIO.read(new File(filename));
 		} catch (IOException e) {
@@ -303,7 +307,7 @@ public class MainClass {
 		ArrayList<Point[]> signDiscrete = new ArrayList<Point[]>();
 		
 		for (ArrayList<Pixel> cc : CC) {
-			Point [] sign = new Point[72]; //72=360/5 on Èchantillonne tous les 5 degrÈs
+			Point [] sign = new Point[72]; //72=360/5 on √©chantillonne tous les 5 degr√©s
 			int seuil = 2;
 			int Sx = 0;
 			int Sy = 0;
@@ -424,20 +428,20 @@ public class MainClass {
 
 	/*
 	 * ********** remarque: il nous faut une image test dont on est sur qu'elle
-	 * est un carré ou un cercle ce qui nous donne les coef de fourier des
-	 * signatures de référence on pourra ainsi comparer les descripteurs obtenus
+	 * est un carr√© ou un cercle ce qui nous donne les coef de fourier des
+	 * signatures de r√©f√©rence on pourra ainsi comparer les descripteurs obtenus
 	 * avec ceux de ref
 	 * 
-	 * il manque une méthode comparaison des descripteurs:
-	 * planteRepéréeParLeCarré qui prend en entrée les descrip l'image
+	 * il manque une m√©thode comparaison des descripteurs:
+	 * planteRep√©r√©eParLeCarr√© qui prend en entr√©e les descrip l'image
 	 * l'arrayList<ArrayList<Pixel>> et qui renvoit une zone au dessus du
-	 * stikers carré (éventuellement nulle)
+	 * stikers carr√© (√©ventuellement nulle)
 	 */
 
 	public boolean comparaisonDescripteursCarre(Complex[] test, float seuil) {
 		boolean estCarre = false;
 		double diff = 0;
-		for (int i = 2; i < Math.min(test.length, refCarre.length); i++) { // commence ‡ deux pour ne pas prendre en compte la taille du carre
+		for (int i = 2; i < Math.min(test.length, refCarre.length); i++) { // commence √© deux pour ne pas prendre en compte la taille du carre
 			diff = diff + 1/i * (Math.abs(test[i].abs() - refCarre[i].abs())) // 1/i signifie que les coeff de f les plus gd(loin) sont - imp ce st du detail
 					/ (Math.abs(test[i].abs() + refCarre[i].abs()));
 		}
@@ -483,7 +487,7 @@ public class MainClass {
 		}
 		f=f/signature.length;
 		
-		double g =0; //moyenne de la signature tÈmoin
+		double g =0; //moyenne de la signature t√©moin
 		for (int i=0; i< this.signCarre.length;i++){
 			g=g+this.signCarre[i].getX();
 		}
@@ -496,7 +500,7 @@ public class MainClass {
 		sigma1= sigma1/signature.length;
 		sigma1= Math.sqrt(sigma1);
 		
-		double sigma2=0; // ecart type de la signature tÈmoin
+		double sigma2=0; // ecart type de la signature t√©moin
 		for (int i=0; i< this.signCarre.length;i++){
 			sigma2=sigma2+Math.pow((this.signCarre[i].getX()-f),2);
 		}
@@ -509,7 +513,7 @@ public class MainClass {
 				Ck= Ck + (signature[(i+k)%72].getX()-f)*(this.signCarre[i].getX()-g);
 			}
 			Ck=Ck/(sigma1*sigma2);
-			//if (Ck<0){ Ck = - Ck ;} //je suis pas s˚r qu'il faille prendre la val abs mais 
+			//if (Ck<0){ Ck = - Ck ;} //je suis pas s√©r qu'il faille prendre la val abs mais 
 			C= Math.max(Ck, C);	
 		}
 		System.out.println("C vaut  " + C + "  le seuil est  " + seuil);
@@ -555,7 +559,7 @@ public class MainClass {
 				int xmax = -1;
 				int xmin = Integer.MAX_VALUE;
 				int ymax = 0;
-				String carre = new String("carrÈ");
+				String carre = new String("carr√©");
 
 				for (Pixel p : compConn.get(i)) {
 					int x = p.getX();
@@ -621,9 +625,10 @@ public class MainClass {
 	
 	
 	public void MiseEnEvidenceDuCarre(Rectangle R){
-		int xmin = (int) Math.round(R.getP1().getX());
-		int xmax = (int) Math.round(R.getP4().getX());
-		int ymax = (int) Math.round(R.getP4().getY());
+		int xmin = (int) Math.round(R.getP1().x);
+		int xmax = (int) Math.round(R.getP3().x);
+		int ymax = (int) Math.round(R.getP3().y);
+		int ymin = (int) Math.round(R.getP1().y);
 		
 		for(int i = xmin; i< xmax; i++){
 			Color color = new Color(255, 0, 0);
@@ -631,7 +636,7 @@ public class MainClass {
 			img.setRGB(i, 0, rgb);
 			img.setRGB(i, ymax, rgb);
 		}
-		for(int i = 0; i< ymax; i++){
+		for(int i = ymin; i< ymax; i++){
 			Color color = new Color(255, 0, 0);
 			int rgb = color.getRGB();
 			img.setRGB(xmin, i, rgb);

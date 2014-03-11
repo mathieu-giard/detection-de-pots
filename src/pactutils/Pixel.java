@@ -1,3 +1,4 @@
+package pactutils;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -41,15 +42,6 @@ public class Pixel {
 
 	public int getY() {
 		return y;
-	}
-	public double getT(){
-		return T;
-	}
-	public double getS(){
-		return S;
-	}
-	public double getL(){
-		return L;
 	}
 
 	// tentative de modif
