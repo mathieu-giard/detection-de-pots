@@ -1,5 +1,8 @@
 package compo_connexe;
+
 import java.util.ArrayList;
+
+import pactutils.Pixel;
 
 public class CompoConnexe {
 
@@ -10,14 +13,14 @@ public class CompoConnexe {
 		this.tab = tab;
 	}
 
-	public CompoConnexe(ArrayList<Cross> list, int maxX, int maxY) {
+	public CompoConnexe(ArrayList<? extends Cross> list, int maxX, int maxY) {
 		Cross tab[][] = new Cross[maxX][maxY];
 		for (Cross cross : list) {
 			tab[cross.getX()][cross.getY()] = cross;
 		}
 	}
 
-	public ArrayList<ArrayList<Cross>> getCompo() {
+	public ArrayList<ArrayList<Pixel>> getCompo() {
 		int maxY = tab.length;
 		int maxX = tab[0].length;
 
@@ -46,16 +49,16 @@ public class CompoConnexe {
 			}
 		}
 
-		ArrayList<ArrayList<Cross>> retour = new ArrayList<ArrayList<Cross>>();
+		ArrayList<ArrayList<Pixel>> retour = new ArrayList<ArrayList<Pixel>>();
 		int sizeRetour = listeEqui.size();
 		for (int i = 0; i < sizeRetour; i++)
-			retour.add(new ArrayList<Cross>());
+			retour.add(new ArrayList<Pixel>());
 
 		for (int y = 0; y < maxY; y++) {
 			for (int x = 0; x < maxX; x++) {
 				Cross cross = tab[x][y];
 				int nbListe = listeEqui.getNumeroListe(cross.getNb());
-				retour.get(nbListe).add(cross);
+				retour.get(nbListe).add((Pixel) cross);
 			}
 		}
 

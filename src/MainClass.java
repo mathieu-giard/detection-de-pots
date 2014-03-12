@@ -11,6 +11,8 @@ import javax.imageio.ImageIO;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.*;
 
+import compo_connexe.CompoConnexe;
+import compo_connexe.Cross;
 import pactutils.Pixel;
 import pactutils.Rectangle;
 
@@ -265,7 +267,10 @@ public class MainClass {
 		return CC;
 	}
 
-	
+	public ArrayList<ArrayList<Pixel>> ComposantesConnexes2(ArrayList<Pixel> choisi){
+		CompoConnexe compoConnexe = new CompoConnexe(choisi,img.getWidth(),img.getHeight());
+		return compoConnexe.getCompo();
+	}
 
 	public ArrayList<ArrayList<Pixel>> Contours(ArrayList<ArrayList<Pixel>> CC , ArrayList<Pixel> choisi) {
 		ArrayList<ArrayList<Pixel>> CONTOURS = new ArrayList<ArrayList<Pixel>>();

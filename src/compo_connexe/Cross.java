@@ -15,7 +15,4 @@ public interface Cross {
 	public int getNb();
 
 	public void setNb(int nb);
-	
-	// je suis pas sur que ca soit ts necessaire
-	public int getNbGr();
 }

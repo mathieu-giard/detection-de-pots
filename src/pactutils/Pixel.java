@@ -1,9 +1,14 @@
 package pactutils;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Pixel {
+import compo_connexe.Cross;
+
+public class Pixel implements Cross {
+
+	/********* constructueur *********/
 
 	private int x;
 	private int y;
@@ -36,15 +41,20 @@ public class Pixel {
 
 	}
 
-	public int getX() {
-		return x;
+	/******** appartenance **********/
+
+	public boolean BelongsTocc(ArrayList<Pixel> cc) {
+		boolean b = false;
+		for (Pixel p : cc) {
+			if (this == p) {
+				b = true;
+			}
+		}
+		return b;
 	}
 
-	public int getY() {
-		return y;
-	}
+	/********* voisinage ***********/
 
-	// tentative de modif
 	public Pixel pixelVoisinGauche(BufferedImage img, ArrayList<Pixel> choisibis) {
 		Pixel V = null;
 		for (Pixel p : choisibis) {
@@ -78,7 +88,7 @@ public class Pixel {
 	public Pixel pixelVoisinHaut(BufferedImage img, ArrayList<Pixel> choisibis) {
 		Pixel V = null;
 		for (Pixel p : choisibis) {
-			if (p.getX() == this.x && p.getY() == this.y-1) {
+			if (p.getX() == this.x && p.getY() == this.y - 1) {
 				V = p;
 			}
 		}
@@ -93,7 +103,7 @@ public class Pixel {
 	public Pixel pixelVoisinBas(BufferedImage img, ArrayList<Pixel> choisibis) {
 		Pixel V = null;
 		for (Pixel p : choisibis) {
-			if (p.getX() == this.x && p.getY() == this.y+1) {
+			if (p.getX() == this.x && p.getY() == this.y + 1) {
 				V = p;
 			}
 		}
@@ -101,23 +111,20 @@ public class Pixel {
 			if (this.y != img.getHeight()) {
 				V = new Pixel(x, y + 1, img);
 			}
-		}	
+		}
 		return V;
 	}
 
-	
-	public boolean BelongsTocc(ArrayList<Pixel> cc) {
-		boolean b = false;
-		for (Pixel p : cc) {
-			if (this == p) {
-				b = true;
-			}
-		}
-		return b;
+	/********** getter **********/
+
+	public int getX() {
+		return x;
 	}
-	
-	
-	
+
+	public int getY() {
+		return y;
+	}
+
 	public int getNumeroPixel() {
 		return nP;
 	}
@@ -126,4 +133,19 @@ public class Pixel {
 		this.nP = a;
 	}
 
+	// A FAIRE 	!!!!!!!!!!!
+	@Override
+	public ArrayList<Cross> getVoisin(Cross[][] tab) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getNb() {
+		return nP;
+	}
+
+	public void setNb(int nb) {
+		this.nP = nb;
+
+	}
 }
