@@ -133,11 +133,26 @@ public class Pixel implements Cross {
 		this.nP = a;
 	}
 
-	// A FAIRE 	!!!!!!!!!!!
+	// A FAIRE !!!!!!!!!!!
 	@Override
 	public ArrayList<Cross> getVoisin(Cross[][] tab) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Cross> retour = new ArrayList<Cross>();
+		if (x == 0 && y == 0)
+			;
+		else if (x == 0) {
+			if (tab[x][y - 1].getNb() >= 0)
+				retour.add(tab[x][y - 1]);
+		} else if (y == 0) {
+			if (tab[x - 1][y].getNb() >= 0)
+				retour.add(tab[x - 1][y]);
+		} else {
+			if (tab[x][y - 1].getNb() >= 0)
+				retour.add(tab[x][y - 1]);
+			if (tab[x - 1][y].getNb() >= 0)
+				retour.add(tab[x - 1][y]);
+		}
+
+		return retour;
 	}
 
 	public int getNb() {
