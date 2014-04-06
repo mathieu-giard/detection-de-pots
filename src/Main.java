@@ -19,6 +19,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		MainClass mc = new MainClass();
+		MainClass mc2 = new MainClass();
 		
 		/*
 		MainClass mc2 = new MainClass();
@@ -97,10 +98,10 @@ public class Main {
 		mc.CreationDeCarreEtRond();
 		mc.outPutImage("carré_et_rond_parfait");
 		mc.decodeimage("carré_et_rond_parfait");
-		ArrayList<Pixel> choisi = mc.selec(0, 360, 0, 0, 100);
+		ArrayList<Pixel> choisi = mc.selec(0, 360, 0,100, 0, 100);
 		mc.outPutImage("rondPSegm.png");
-		ArrayList<ArrayList<Pixel>> CC=mc.ComposantesConnexes(choisi);
-		mc.outPutImage("rondCC.png");
+		ArrayList<ArrayList<Pixel>> CC=mc.ComposantesConnexes2(choisi);
+		mc.outPutImage("rondCC2.png");
 		ArrayList<Point[]> signature = mc.SIGNATURE(CC);
 		mc.setSignCarre(signature.get(0));
 		// on a initialisé l'attribu signCarré qui va servir de référence
@@ -210,6 +211,7 @@ public class Main {
 	// */
 
 		// TEST GRANDEUR NATURE
+		/*
 		System.out.println("DEBUT DEMO");
 
 		mc.decodeimage(args[0]);
@@ -233,9 +235,9 @@ public class Main {
 		
 		mc.outPutImage("zoneDontOnTesteSiCEstUnCarre.png");
 		ArrayList<Rectangle> R = null;
-		R = mc.zonePlante(signature2, CC2);
+		//R = mc.zonePlante(signature2, CC2);
 		try{
-			mc.MiseEnEvidenceDuCarre(R.get(0));
+			mc.MiseEnEvidenceDuCarre(R);
 
 		}catch(Exception e){
 			System.out.println("cannot find sticker");
@@ -282,7 +284,7 @@ public class Main {
 	System.out.println("carré8 " +carré8);
 	// */
 
-
+/*
 		ObjectOutputStream write;
 		try {
 			write = new ObjectOutputStream(new FileOutputStream(args[1]));
@@ -299,5 +301,65 @@ public class Main {
 		}
 	}
 
-	mc.mainAlgo("pagevierge.png","img-carré3.png", 0.85, 1.05, 0.05, 0.15, 0.4,8);
+	mc.mainAlgo("pagevierge.png","img-carré3.png", 0.85, 1.05, 0.05, 0.15, 0.4,8.0);
+	 * 
+	 */
+	
+	
+	System.out.println("DEBUT DU TEST")	;
+	mc.decodeimage("img-2014_03_12,10_05.png");
+	
+	/*
+	System.out.println(" ");
+	System.out.println("jaune sticker");
+	mc.TSL(177, 217);
+	System.out.println(" ");
+	System.out.println("jaune sticker");
+	mc.TSL(501, 189);
+	System.out.println(" ");
+	System.out.println("jaune sticker");
+	mc.TSL(913, 223);
+	System.out.println(" ");
+	System.out.println("jaune sticker");
+	mc.TSL(1345, 201);
+	System.out.println(" ");
+	System.out.println("jaune sticker");
+	mc.TSL(1813, 209);
+	System.out.println(" ");
+	System.out.println(" ");
+	System.out.println(" ");
+	System.out.println("jaune sticker");
+	mc.TSL(441, 141);
+	System.out.println(" ");
+	System.out.println("jaune sticker");
+	mc.TSL(489, 189);
+	System.out.println(" ");
+	System.out.println("pas jaune sticker");
+	mc.TSL(1181, 229);
+	System.out.println(" ");
+	System.out.println("pas jaune sticker");
+	mc.TSL(1361, 333);
+	System.out.println(" ");
+	// */
+	
+	
+	//ArrayList<Pixel> choisi2 = mc.selec(0.15, 1.0, 0.08,0.3, 0.20, 0.6);
+	Pixel[][] choisi2 = mc.selection(0.15, 1.0,0.08,0.3,0.2,0.6);
+	mc.outPutImage("Result");
+	System.out.println("CompoConnexe début");
+	ArrayList<ArrayList<Pixel>> CC2 = mc.ComposantesConnexes2(choisi2);
+	mc.CcChangeCouleur(CC2);
+	System.out.println("CompoConnexe finie");
+	//mc.Contours(CC2, choisi2);
+	
+	ArrayList<Point[]> signature2 = mc.SIGNATURE(CC2);
+	System.out.println("signature finie");
+	ArrayList<Rectangle> Rect = mc.zonePlante(signature2, CC2, 30);
+	mc.MiseEnEvidenceDuCarre(Rect);
+	mc.outPutImage("Résultat");
+	
+		
+	// */	
+		
+	}	
 }

@@ -15,7 +15,8 @@ public class Pixel implements Cross {
 	private float T;
 	private float L;
 	private float S;
-	private int nP = Integer.MAX_VALUE;
+	private int nP = -1;
+	private boolean selectionne = false;
 
 	public Pixel(int x, int y, float T, float S, float L) {
 		this.x = x;
@@ -162,5 +163,13 @@ public class Pixel implements Cross {
 	public void setNb(int nb) {
 		this.nP = nb;
 
+	}
+
+	public void setSelectionne(boolean selectionne) {
+		this.selectionne = selectionne;
+	}
+
+	public boolean getSelectionne() {
+		return this.selectionne;
 	}
 }

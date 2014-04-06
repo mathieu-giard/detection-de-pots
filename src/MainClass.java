@@ -24,13 +24,14 @@ public class MainClass {
 	private Point[] signRond;
 
 	public ArrayList<Rectangle> mainAlgo(String filename1, String filename2,
-			double d, double e, double f, double g, double h, double seuilCarre) {
+			double d, double e, double f, double g, double h, double i,
+			double seuilCarre) {
 
 		this.decodeimage(filename1);
 		this.CreationDeCarreEtRond();
 		this.outPutImage("carré_et_rond_parfait");
 		this.decodeimage("carré_et_rond_parfait");
-		ArrayList<Pixel> choisi = this.selec(0, 360, 0, 0, 100);
+		ArrayList<Pixel> choisi = this.selec(0, 360, 0, 100, 0, 100);
 		this.outPutImage("carréPSegm");
 		ArrayList<ArrayList<Pixel>> CC = this.ComposantesConnexes(choisi);
 		this.outPutImage("carréCC");
@@ -39,7 +40,7 @@ public class MainClass {
 		// on a initialisé l'attribu signCarré qui va servir de référence
 
 		this.decodeimage(filename2);
-		ArrayList<Pixel> choisi2 = this.selec(d, e, f, g, h);
+		ArrayList<Pixel> choisi2 = this.selec(d, e, f, g, h, i);
 		this.outPutImage("img-carré3-segm");
 		ArrayList<ArrayList<Pixel>> CC2 = this.ComposantesConnexes(choisi2);
 		this.outPutImage("img-carré3-compConn");
@@ -49,15 +50,17 @@ public class MainClass {
 		this.outPutImage("zone_rendue3");
 		return R;
 
-	/*ArrayList<Pixel> s = this.selec(seuilTinf, seuilTsup, seuilS, seuilL,seuilL2);
-		
-		ArrayList<ArrayList<Pixel>> t = ComposantesConnexes(s);
-		
-		ArrayList<ArrayList<Point>> v = ;
-		
-		ArrayList<Rectangle> ResultatFinal = zonePlante(
-				seuilTestRondCarre);
-		return ResultatFinal;*/
+		/*
+		 * ArrayList<Pixel> s = this.selec(seuilTinf, seuilTsup, seuilS,
+		 * seuilL,seuilL2);
+		 * 
+		 * ArrayList<ArrayList<Pixel>> t = ComposantesConnexes(s);
+		 * 
+		 * ArrayList<ArrayList<Point>> v = ;
+		 * 
+		 * ArrayList<Rectangle> ResultatFinal = zonePlante( seuilTestRondCarre);
+		 * return ResultatFinal;
+		 */
 	}
 
 	public void outPutImage(String fileName) {
@@ -172,7 +175,7 @@ public class MainClass {
 	}
 
 	public ArrayList<Pixel> selec(double seuilTinf, double seuilTsup,
-			double seuilS, double seuilL1, double seuilL2) {
+			double seuilSinf, double seuilSsup, double seuilL1, double seuilL2) {
 		// selection des bons pixels
 		ArrayList<Pixel> Choisi = new ArrayList<Pixel>();
 
@@ -189,7 +192,7 @@ public class MainClass {
 																// HSB
 
 				if (hsb[2] > seuilL1 && hsb[2] < seuilL2) {
-					if (hsb[1] > seuilS) {
+					if (hsb[1] > seuilSinf && hsb[1] < seuilSsup) {
 						if (seuilTinf < hsb[0] && hsb[0] < seuilTsup) {
 							Pixel P = new Pixel(x, y, hsb[0], hsb[1], hsb[2]);
 							Choisi.add(P);
@@ -205,6 +208,39 @@ public class MainClass {
 		// affiche choisi dans la console pour test
 		System.out.println(Choisi.size());
 		return Choisi;
+	}
+
+	public Pixel[][] selection(double seuilTinf, double seuilTsup,
+			double seuilSinf, double seuilSsup, double seuilL1, double seuilL2) {
+		Pixel[][] pix = new Pixel[img.getWidth()][img.getHeight()];
+
+		for (int x = 0; x < img.getWidth(); x++) {
+			for (int y = 0; y < img.getHeight(); y++) {// parcourir l'image
+
+				Color c = new Color(img.getRGB(x, y));// prendre des valeurs RGB
+														// de chaque pixel
+				int r = c.getRed();
+				int g = c.getGreen();
+				int b = c.getBlue();
+
+				float[] hsb = Color.RGBtoHSB(r, g, b, null); // convertir RGB en
+																// HSB
+
+				if (hsb[2] > seuilL1 && hsb[2] < seuilL2) {
+					if (hsb[1] > seuilSinf && hsb[1] < seuilSsup) {
+						if (seuilTinf < hsb[0] && hsb[0] < seuilTsup) {
+							Pixel P = new Pixel(x, y, hsb[0], hsb[1], hsb[2]);
+							P.setSelectionne(true);
+							pix[x][y] = P;
+						}
+					}
+				} else {
+					Pixel P = new Pixel(x, y, hsb[0], hsb[1], hsb[2]);
+					pix[x][y] = P;
+				}
+			}
+		}
+		return pix;
 	}
 
 	public ArrayList<ArrayList<Pixel>> ComposantesConnexes(
@@ -270,6 +306,23 @@ public class MainClass {
 		CompoConnexe compoConnexe = new CompoConnexe(choisi, img.getWidth(),
 				img.getHeight());
 		return compoConnexe.getCompo();
+	}
+
+	public ArrayList<ArrayList<Pixel>> ComposantesConnexes2(Pixel[][] choisi) {
+		CompoConnexe compoConnexe = new CompoConnexe(choisi);
+		return compoConnexe.getCompo();
+	}
+
+	public void CcChangeCouleur(ArrayList<ArrayList<Pixel>> CC) {
+		for (int k = 0; k < CC.size(); k++) {
+			ArrayList<Pixel> Pix = CC.get(k);
+			for (Pixel pixel3 : Pix) {
+				Color color = new Color(k * 20 % 255, 125 + (-1) ^ k * 10 * k
+						% 255, 255 - 20 * k % 255);
+				int rgb = color.getRGB();
+				img.setRGB(pixel3.getX(), pixel3.getY(), rgb);
+			}
+		}
 	}
 
 	public ArrayList<ArrayList<Pixel>> Contours(ArrayList<ArrayList<Pixel>> CC,
@@ -554,7 +607,7 @@ public class MainClass {
 
 		double sigma2 = 0; // ecart type de la signature tÃ©moin
 		for (int i = 0; i < this.signCarre.length; i++) {
-			sigma2 = sigma2 + Math.pow((this.signCarre[i].getX() - f), 2);
+			sigma2 = sigma2 + Math.pow((this.signCarre[i].getX() - g), 2);
 		}
 		sigma2 = sigma2 / this.signCarre.length;
 		sigma2 = Math.sqrt(sigma2);
@@ -562,7 +615,7 @@ public class MainClass {
 		for (int k = 0; k < 72; k++) {
 			double Ck = 0;
 			for (int i = 0; i < 72; i++) {
-				Ck = Ck + (signature[(i + k) % 72].getX() - f)
+				Ck += (signature[(i + k) % 72].getX() - f)
 						* (this.signCarre[i].getX() - g);
 			}
 			Ck = Ck / (sigma1 * sigma2);
@@ -609,7 +662,7 @@ public class MainClass {
 			if (this.IsCarre(Sign.get(i), seuilCarre)) {
 				int xmax = -1;
 				int xmin = Integer.MAX_VALUE;
-				int ymax = 0;
+				int ymin = Integer.MAX_VALUE;
 				String carre = new String("carrÃ©");
 
 				for (Pixel p : compConn.get(i)) {
@@ -621,78 +674,69 @@ public class MainClass {
 					if (x < xmin) {
 						xmin = x;
 					}
-					if (ymax < y) {
-						ymax = y;
+					if (y < ymin) {
+						ymin = y;
 					}
 
 				}
 				int delta = xmax - xmin;
-				xmin = (int) xmin - delta / 2;
+				xmin = (int) xmin - delta / 1; // on peut agir sur la taille du
+												// carré là
 				int xgch = Math.max(xmin, 0);
-				xmax = (int) xmax + delta / 2;
+				xmax = (int) xmax + delta / 1; // et là
 				int xim = img.getWidth() - 1;
 				int xdt = Math.min(xmax, xim);
 
-				System.out.println(xmin + "  " + xmax + "  " + ymax);
+				System.out.println(xmin + "  " + xmax + "  " + ymin);
 				Point p1 = new Point(xgch, 0);
-				Point p2 = new Point(xgch, ymax);
+				Point p2 = new Point(xgch, ymin);
 				Point p3 = new Point(xdt, 0);
-				Point p4 = new Point(xdt, ymax);
+				Point p4 = new Point(xdt, ymin);
 				Rectangle r = new Rectangle(p1, p2, p3, p4, carre);
 				R.add(r);
 			}
 			/*
-			if (comparaisonDescripteursRond(DF.get(i), seuil)) {
-				int xmax = -1;
-				int xmin = Integer.MAX_VALUE;
-				int ymax = 0;
-				String rond = new String();
-
-				for (Pixel p : contours.get(i)) {
-					int x = p.getX();
-					int y = p.getY();
-					if (xmax < x) {
-						xmax = x;
-					}
-					if (x < xmin) {
-						xmin = x;
-					}
-					if (ymax < y) {
-						ymax = y;
-					}
-
-				}
-				Point p1 = new Point(xmin, 0);
-				Point p2 = new Point(xmin, ymax);
-				Point p3 = new Point(xmax, 0);
-				Point p4 = new Point(xmax, ymax);
-				Rectangle r = new Rectangle(p1, p2, p3, p4, rond);
-				R.add(r);
-
-			}
-		} */
+			 * if (comparaisonDescripteursRond(DF.get(i), seuil)) { int xmax =
+			 * -1; int xmin = Integer.MAX_VALUE; int ymax = 0; String rond = new
+			 * String();
+			 * 
+			 * for (Pixel p : contours.get(i)) { int x = p.getX(); int y =
+			 * p.getY(); if (xmax < x) { xmax = x; } if (x < xmin) { xmin = x; }
+			 * if (ymax < y) { ymax = y; }
+			 * 
+			 * } Point p1 = new Point(xmin, 0); Point p2 = new Point(xmin,
+			 * ymax); Point p3 = new Point(xmax, 0); Point p4 = new Point(xmax,
+			 * ymax); Rectangle r = new Rectangle(p1, p2, p3, p4, rond);
+			 * R.add(r);
+			 * 
+			 * } }
+			 */
 		}
 		return R;
 
 	}
 
-	public void MiseEnEvidenceDuCarre(Rectangle R) {
-		int xmin = (int) Math.round(R.getP1().x);
-		int xmax = (int) Math.round(R.getP3().x);
-		int ymax = (int) Math.round(R.getP3().y);
-		int ymin = (int) Math.round(R.getP1().y);
+	public void MiseEnEvidenceDuCarre(ArrayList<Rectangle> Rect) {
 
-		for (int i = xmin; i < xmax; i++) {
-			Color color = new Color(255, 0, 0);
-			int rgb = color.getRGB();
-			img.setRGB(i, 0, rgb);
-			img.setRGB(i, ymax, rgb);
-		}
-		for (int i = ymin; i < ymax; i++) {
-			Color color = new Color(255, 0, 0);
-			int rgb = color.getRGB();
-			img.setRGB(xmin, i, rgb);
-			img.setRGB(xmax, i, rgb);
+		for (Rectangle R : Rect) {
+			int xmin = (int) Math.round(R.getP1().x);
+			int xmax = (int) Math.round(R.getP4().x);
+			// int ymax = (int) Math.round(R.getP3().y);
+			int ymin = (int) Math.round(R.getP4().y);
+
+			for (int i = xmin; i < xmax; i++) {
+				Color color = new Color(255, 0, 0);
+				int rgb = color.getRGB();
+				img.setRGB(i, 0, rgb);
+				img.setRGB(i, ymin, rgb);
+			}
+			for (int i = 0; i < ymin; i++) {
+				Color color = new Color(255, 0, 0);
+				int rgb = color.getRGB();
+				img.setRGB(xmin, i, rgb);
+				img.setRGB(xmax, i, rgb);
+			}
 		}
 	}
+
 }

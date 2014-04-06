@@ -43,7 +43,7 @@ public class ListeEqui extends ArrayList<ArrayList<Integer>> {
 	/************************ MISE EN PLACE DES EQUIVALENCES **********************/
 
 	/*
-	 * cette classe doit prendre en entre une liste de nombre la comparer avec
+	 * cette classe doit prendre en entree une liste de nombre la comparer avec
 	 * les listes existentes ajouter le nombre ET/OU fusionner des listes
 	 */
 

@@ -40,31 +40,36 @@ public class CompoConnexe {
 		for (int y = 0; y < maxY; y++) {
 			for (int x = 0; x < maxX; x++) {
 				Cross cross = tab[x][y];
-				if (cross.getNb() >= 0) {
-					cross.setNb(maxNb);
-
-					ArrayList<Cross> voisins = cross.getVoisin(tab);
-					if (!voisins.isEmpty()) {
-						cross.setNb(voisins.get(0).getNb());
-						ArrayList<Integer> aAjouter = new ArrayList<Integer>();
-						for (Cross voisin : voisins)
-							aAjouter.add(voisin.getNb());
-						listeEqui.add(aAjouter);
-					} else {
+				if (cross.getSelectionne()) {
+					if (cross.getNb() >= 0) {
 						cross.setNb(maxNb);
-						ArrayList<Integer> aAjouter = new ArrayList<Integer>();
-						aAjouter.add(maxNb);
-						listeEqui.add(aAjouter);
-						maxNb++;
+
+						ArrayList<Cross> voisins = cross.getVoisin(tab);
+						if (!voisins.isEmpty()) {
+							cross.setNb(voisins.get(0).getNb());
+							ArrayList<Integer> aAjouter = new ArrayList<Integer>();
+							for (Cross voisin : voisins)
+								aAjouter.add(voisin.getNb());
+							listeEqui.add(aAjouter);
+						} else {
+							cross.setNb(maxNb);
+							ArrayList<Integer> aAjouter = new ArrayList<Integer>();
+							aAjouter.add(maxNb);
+							listeEqui.add(aAjouter);
+							maxNb++;
+						}
 					}
 				}
 			}
 		}
 
 		ArrayList<ArrayList<Pixel>> retour = new ArrayList<ArrayList<Pixel>>();
+		ArrayList<ArrayList<Pixel>> retourbis = new ArrayList<ArrayList<Pixel>>();
 		int sizeRetour = listeEqui.size();
-		for (int i = 0; i < sizeRetour; i++)
+		for (int i = 0; i < sizeRetour; i++) {
+			// if()
 			retour.add(new ArrayList<Pixel>());
+		}
 
 		for (int y = 0; y < maxY; y++) {
 			for (int x = 0; x < maxX; x++) {
@@ -75,7 +80,12 @@ public class CompoConnexe {
 				}
 			}
 		}
-
-		return retour;
+		for (ArrayList<Pixel> Pix : retour) {
+			if (Pix.size() > 150) {
+				retourbis.add(Pix);
+			}
+		}
+		return retourbis;
 	}
+
 }
